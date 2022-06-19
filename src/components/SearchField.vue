@@ -20,7 +20,7 @@ function updateModelValue() {
       placeholder="What do you look for?"
       required
       class="w-full h-10 px-2 py-1.5 rounded-sm font-normal text-base placeholder:text-neutral-400 bg-white/70 border border-black/5 border-b-black/40 outline outline-2 outline-offset-1 outline-transparent focus-visible:outline-black hover:bg-neutral-100/70 valid:border-b-2 valid:border-b-teal-900 transition-all"
-      @keyup.enter="updateModelValue"
+      @keyup="updateModelValue"
     />
 
     <button
