@@ -9,6 +9,8 @@ import { onMounted, watchEffect } from 'vue'
 const props = defineProps({ search: String })
 const emit = defineEmits(['clear-search', 'item-clicked'])
 
+let order = $ref('id')
+
 // Starting reactive object to handle the state of the API fetch.
 let fetchState = $ref({ isFetching: true, error: null, data: null })
 
@@ -35,7 +37,12 @@ const filteredItems = $computed(() => {
     (item) =>
       item.name.indexOf(props.search.toLowerCase()) > -1 ||
       item.id === Number(props.search)
-  )
+  ).sort((a, b) => {
+    if (order === 'name') {
+      return a.name < b.name ? -1 : a.name > b.name ? 1 : 0
+    }
+    return a.id < b.id ? -1 : a.id > b.id ? 1 : 0
+  })
 })
 
 // Computed message with count of items found after a search.
@@ -89,6 +96,28 @@ watchEffect(() =>
       >
         <IconDismissCircle class="w-4 h-4" />
         <span>Clear</span>
+      </button>
+    </div>
+
+    <div
+      class="mb-8 flex gap-4 flex-wrap items-center justify-center"
+    >
+      <span>Ordenar por:</span>
+
+      <button
+        :class="{ 'bg-red-600': order === 'id', 'text-white': order === 'id'}"
+        class="inline-flex gap-2 items-center h-8 px-3 rounded active:text-black/60 border border-black/5 border-b-black/40 bg-white/70 active:bg-neutral-700/5 active:border-black/5 outline outline-2 outline-offset-1 outline-transparent focus-visible:outline-black transition-all"
+        @click="order='id'"
+      >
+        <span>Código</span>
+      </button>
+
+      <button
+        :class="{ 'bg-red-600': order === 'name', 'text-white': order === 'name'}"
+        class="inline-flex gap-2 items-center h-8 px-3 rounded active:text-black/60 border border-black/5 border-b-black/40 bg-white/70 active:bg-neutral-700/5 active:border-black/5 outline outline-2 outline-offset-1 outline-transparent focus-visible:outline-black transition-all"
+        @click="order='name'"
+      >
+        <span>Nome</span>
       </button>
     </div>
 
